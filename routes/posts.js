@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
 
 // 게시글 조회 API
 router.get("/", async (req, res) => {
-    const posts = await Posts.find().sort({createdAt: -1});
+    const posts = await Posts.find().sort({ createdAt: -1 });
 
     const data = [];
     for(let i = 0; i < posts.length; i++) {
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
             title: posts[i].title,
             createdAt: posts[i].createdAt,
         });
-    }
+    };
     res.json({ data });
 });
 

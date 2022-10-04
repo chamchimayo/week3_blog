@@ -16,4 +16,22 @@ router.post("/:postId", async (req, res) => {
     res.json({ "message": "댓글을 생성하였습니다."} );
 });
 
+// 댓글 목록 조회 API
+router.get("/:postId", async (req, res) => {
+    const { postId } = req.params;
+    const comments = await Comments.find({ postId }).sort({ createdAt: -1 });
+
+    const data = [];
+    for(let i = 0 ; i < comments.length; i++) {
+        data.push({
+            commentId: comments[i]._id.toString(),
+            user: comments[i].user,
+            content: comments[i].content,
+            createdAt: comments[i].createdAt,
+        });
+    };
+
+    res.json({ data });
+});
+
 module.exports = router;
