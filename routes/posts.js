@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
 // 게시글 조회 API
 router.get("/", async (req, res) => {
     const posts = await Posts.find().sort({createdAt: -1});
+
     const data = [];
     for(let i = 0; i < posts.length; i++) {
         data.push({
@@ -43,6 +44,27 @@ router.get("/:postId", async (req,res) => {
         };
         res.json({ data });
     }
+});
+
+// 게시글 수정 API
+router.put("/:postId", async (req, res) => {
+    const { postId } = req.params;
+    const { title, password, content } = req.body;
+    
+    const post = await Posts.find({ _id : postId });
+    if (password != post[0].password) {
+        return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
+    }
+
+    if(post.length) {
+        await Posts.updateOne(
+            { _id: postId }, 
+            { $set: { password: password, title: title, contetnt: content } });
+    } else {
+        return res.status(400).json({ success: false, errorMessage: "게시글이 존재하지 않습니다." });
+    }
+
+    res.json({ "message": "게시글을 수정하였습니다." });
 });
 
 module.exports = router;
