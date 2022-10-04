@@ -67,4 +67,22 @@ router.put("/:postId", async (req, res) => {
     res.json({ "message": "게시글을 수정하였습니다." });
 });
 
+router.delete("/:postId", async (req,res) => {
+    const { postId } = req.params;
+    const { password } = req.body;
+
+    const post = await Posts.find({ _id : postId });
+    console.log(post);
+    if (password != post[0].password) {
+        return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
+    }
+    
+    if(post.length) {
+        await Posts.deleteOne({ _id : postId });
+        return res.json({ "message": "게시글을 삭제하였습니다." });
+    } else {
+        return res.status(400).json({ success: false, errorMessage: "게시글이 존재하지 않습니다." });
+    }
+});
+
 module.exports = router;
