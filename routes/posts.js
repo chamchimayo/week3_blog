@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Posts = require("../schemas/posts");
+const Posts = require("../schemas/post");
 
 // 게시글 작성 API
 router.post("/", async (req, res) => {
@@ -76,7 +76,7 @@ router.delete("/:postId", async (req,res) => {
     if (password != post[0].password) {
         return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
     }
-    
+
     if(post.length) {
         await Posts.deleteOne({ _id : postId });
         return res.json({ "message": "게시글을 삭제하였습니다." });
