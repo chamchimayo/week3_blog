@@ -23,7 +23,26 @@ router.get("/", async (req, res) => {
             createdAt: posts[i].createdAt,
         });
     }
-    res.json({ data })
+    res.json({ data });
+});
+
+// 게시글 상세 조회 API
+router.get("/:postId", async (req,res) => {
+    const { postId } = req.params;
+    const post = await Posts.find({ _id : postId });
+
+    if (!post.length) {
+        return res.status(400).json({ success: false, errorMessage: "게시글이 존재하지 않습니다." });
+    } else {
+        const data = {
+            postId: post[0]._id,
+            user: post[0].user,
+            title: post[0].title,
+            content: post[0].content,
+            createdAt: post[0].createdAt
+        };
+        res.json({ data });
+    }
 });
 
 module.exports = router;
