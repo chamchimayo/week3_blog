@@ -60,5 +60,23 @@ router.put("/:commentId", async(req, res) => {
     }
 });
 
+// 댓글 삭제 API
+router.delete("/:commentId", async (req, res) => {
+    const { commentId } = req.params;
+    const { password } = req.body;
+
+    const comment = await Comments.find({ _id : commentId });
+
+    if(password != comment[0].password) {
+        return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
+    }
+
+    if(comment.length) {
+        await Comments.deleteOne({ _id : commentId });
+        return res.json({ "message": "댓글을 삭제하였습니다." });
+    } else {
+        return res.json(400).json({ success: false, errorMessage: "댓글이 존재하지 않습니다." });
+    }
+});
 
 module.exports = router;
