@@ -59,7 +59,8 @@ router.put("/:postId", async (req, res) => {
     if(post.length) {
         await Posts.updateOne(
             { _id: postId }, 
-            { $set: { password: password, title: title, contetnt: content } });
+            { $set: { password: password, title: title, contetnt: content } }
+        );
     } else {
         return res.status(400).json({ success: false, errorMessage: "게시글이 존재하지 않습니다." });
     }

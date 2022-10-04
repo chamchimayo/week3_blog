@@ -34,4 +34,31 @@ router.get("/:postId", async (req, res) => {
     res.json({ data });
 });
 
+// 댓글 수정 API
+router.put("/:commentId", async(req, res) => {
+    const { commentId } = req.params;
+    const { password, content } = req.body;
+
+    const comment = await Comments.find({ _id : commentId });
+
+    if(password != comment[0].password) {
+        return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
+    }
+
+    if(content === "") {
+        return res.status(400).json({ success: false, errorMessage: "댓글 내용을 입력해주세요." });
+    }
+
+    if(comment.length) {
+        await Comments.updateOne(
+            { _id: commentId }, 
+            { $set: { password: password, content: content } }
+        );
+        return res.json({ "message": "댓글을 수정하였습니다."});
+    } else {
+        return res.status(400).json({ success: false, errorMessage: "댓글이 존재하지 않습니다." });
+    }
+});
+
+
 module.exports = router;
