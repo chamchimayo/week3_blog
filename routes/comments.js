@@ -39,9 +39,10 @@ router.put("/:commentId", async(req, res) => {
     const { commentId } = req.params;
     const { password, content } = req.body;
 
-    const comment = await Comments.find({ _id : commentId });
+    console.log(commentId);
+    const comment = await Comments.findOne({ _id : commentId });
 
-    if(password != comment[0].password) {
+    if(password != comment.password) {
         return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다." });
     }
 
@@ -49,7 +50,8 @@ router.put("/:commentId", async(req, res) => {
         return res.status(400).json({ success: false, errorMessage: "댓글 내용을 입력해주세요." });
     }
 
-    if(comment.length) {
+    console.log(comment);
+    if(comment !== undefined) {
         await Comments.updateOne(
             { _id: commentId }, 
             { $set: { password: password, content: content } }
